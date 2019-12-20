@@ -9,7 +9,14 @@ class RingBuffer:
 
     def append(self, item):
         if self.storage.length == self.capacity:
-            self.storage.remove_from_head()
+            if self.current is None:
+                self.storage.remove_from_head()
+                self.storage.add_to_head(item)
+                self.current = self.storage.head.next
+                return
+            self.current.value = item    
+            self.current = self.current.next    
+            return
         self.storage.add_to_tail(item)
 
 
@@ -18,12 +25,19 @@ class RingBuffer:
         list_buffer_contents = []
 
         # TODO: Your code here
+        if self.storage.head is None:
+            return list_buffer_contents
         current_node = self.storage.head
-        while current_node is not self.storage.tail:
+        ln = int(0)
+        while ln <= self.storage.length:
+            if current_node is None:
+                return list_buffer_contents
             if current_node.value is not None:
                 list_buffer_contents.append(current_node.value)
+            current_node = current_node.next
+            ln +=1
+        print('buff',list_buffer_contents)
         return list_buffer_contents
-
 # ----------------Stretch Goal-------------------
 
 
